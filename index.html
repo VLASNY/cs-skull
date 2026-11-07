@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS SKULL — CS2 Servers</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b0b0e;color:#f5f5f5;font-family:Arial,sans-serif}
+header{background:#141419;border-bottom:1px solid #292930;padding:20px 7%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px}
+.logo{font-size:27px;font-weight:900;color:#ff3038}
+nav a{color:#ddd;text-decoration:none;margin:0 10px;font-size:14px}
+nav a:hover{color:#ff3038}
+.hero{text-align:center;padding:75px 15px 55px;background:radial-gradient(ellipse at center,#391317 0%,#0b0b0e 70%)}
+.skull{font-size:65px}
+h1{font-size:48px;margin:12px 0;color:#fff}
+h1 span{color:#ff3038}
+.hero p{color:#aaa}
+main{max-width:1100px;margin:auto;padding:25px 18px}
+.section-title{font-size:25px;margin:25px 0}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+button,.filter{background:#202027;border:1px solid #38383f;color:white;padding:11px 16px;border-radius:7px;cursor:pointer}
+button:hover,.filter.active{background:#bd202b;border-color:#ff3038}
+.search{background:#17171d;border:1px solid #34343b;color:white;padding:13px;border-radius:7px;flex:1;min-width:180px}
+.servers{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:15px}
+.server{background:#17171d;border:1px solid #303038;border-radius:10px;padding:19px}
+.server h3{margin:0 0 10px}
+.server p{color:#aaa;font-size:14px}
+.tag{color:#ff555d;font-size:12px;font-weight:bold}
+.connect{width:100%;margin-top:10px;background:#bd202b;border:0}
+.status{color:#aaa;font-size:12px}
+.info{background:#17171d;border:1px solid #303038;padding:25px;border-radius:10px;margin-top:30px}
+footer{text-align:center;padding:35px;color:#777;border-top:1px solid #292930;margin-top:45px}
+@media(max-width:600px){h1{font-size:36px}header{justify-content:center}nav{text-align:center}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">💀 CS SKULL</div>
+  <nav>
+    <a href="#servers">Серверы</a>
+    <a href="#skins">Скины</a>
+    <a href="#founder">Основатель</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="skull">💀</div>
+  <h1>CS <span>SKULL</span></h1>
+  <p>ТВОЁ МЕСТО В МИРЕ COUNTER-STRIKE 2</p>
+  <p>PUBLIC SERVERS • AWP • SKIN PREVIEW</p>
+</section>
+
+<main>
+  <h2 class="section-title" id="servers">Наши серверы</h2>
+  <div class="filters">
+    <button class="filter active" data-filter="all">Все</button>
+    <button class="filter" data-filter="Mirage">Mirage</button>
+    <button class="filter" data-filter="Dust2">Dust II</button>
+    <button class="filter" data-filter="AWP">AWP Only</button>
+    <input class="search" id="search" placeholder="Поиск сервера...">
+  </div>
+  <div class="servers" id="servers-list"></div>
+
+  <section class="info" id="skins">
+    <h2>💀 SKIN PREVIEW</h2>
+    <p>Скоро здесь появится бесплатный каталог скинов, ножей и перчаток с визуальным предпросмотром.</p>
+  </section>
+
+  <section class="info" id="founder">
+    <h2>🔐 FOUNDER PANEL</h2>
+    <p>Закрытая панель основателя CS SKULL.</p>
+    <p>Авторизация Steam и проверка прав будут подключены на серверной стороне.</p>
+  </section>
+</main>
+
+<footer>
+  💀 CS SKULL © 2026<br>
+  Counter-Strike 2 Community
+</footer>
+
+<script>
+const servers = [
+  ...[1,2,3,4,5].map(n=>({name:`CS SKULL MIRAGE #${n}`,map:"Mirage",mode:"Public",detail:"de_mirage"})),
+  ...[1,2,3,4,5].map(n=>({name:`CS SKULL DUST2 #${n}`,map:"Dust2",mode:"Public",detail:"de_dust2"})),
+  {name:"CS SKULL AWP ONLY",map:"AWP",mode:"AWP Only",detail:"awp_lego_2 / Mirage"}
+];
+
+let currentFilter="all";
+const list=document.getElementById("servers-list");
+
+function render(){
+  const query=document.getElementById("search").value.toLowerCase();
+  const filtered=servers.filter(s=>
+    (currentFilter==="all"||s.map===currentFilter)&&
+    (s.name.toLowerCase().includes(query)||s.detail.toLowerCase().includes(query))
+  );
+  list.innerHTML=filtered.map(s=>`
+    <article class="server">
+      <div class="tag">${s.mode.toUpperCase()}</div>
+      <h3>💀 ${s.name}</h3>
+      <p>Карта: ${s.detail}</p>
+      <div class="status">Статус: ожидает подключения реального сервера</div>
+      <button class="connect" disabled style="opacity:.55;cursor:not-allowed">Скоро подключение</button>
+    </article>
+  `).join("");
+}
+document.querySelectorAll(".filter").forEach(button=>{
+  button.addEventListener("click",()=>{
+    document.querySelectorAll(".filter").forEach(b=>b.classList.remove("active"));
+    button.classList.add("active");
+    currentFilter=button.dataset.filter;
+    render();
+  });
+});
+document.getElementById("search").addEventListener("input",render);
+render();
+</script>
+</body>
+</html>
